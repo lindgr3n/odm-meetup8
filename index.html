@@ -1,0 +1,206 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8" />
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <title>Vue tutorial</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
+  <style>
+    .active {
+      background-color: blue;
+    }
+  </style>
+</head>
+<body>
+  <h3>All examples origin from https://vuejs.org/v2/guide/ (with a minor twist)</h3>
+  <div id="app">
+    {{ message }}
+  </div>
+  <hr>
+  <div id="app-2">
+    <span v-bind:title="message">
+      Hover your mouse over me for a few seconds
+      to see my dynamically bound title!
+    </span>
+  </div>
+  <hr>
+  <div id="app-3">
+    <span v-if="seen">Now you see me</span>
+    <button v-on:click="toggle">Show/Hide</button>
+  </div>
+  <hr>
+  <div id="app-4">
+    <button v-on:click="addItem" v-if="extra.length > 0">Add more</button>
+    <ol>
+      <li v-for="todo in todos">
+        {{ todo.text }}
+      </li>
+    </ol>
+  </div>
+  <hr>
+  <div id="app-5">
+    <p>{{ message }}</p>
+    <button v-on:click="reverseMessage">Reverse Message</button>
+  </div>
+  <hr>
+  <div id="app-6">
+    <p>{{ message }}</p>
+    <input v-model="message">
+  </div>
+  <hr>
+  Components
+  <div id="app-7">
+    <ol>
+      <!--
+        Now we provide each todo-item with the todo object
+        it's representing, so that its content can be dynamic.
+        We also need to provide each component with a "key",
+        which will be explained later.
+      -->
+      <todo-item
+        v-for="item in odm"
+        v-bind:todo="item"
+        v-bind:key="item.id">
+      </todo-item>
+    </ol>
+  </div>
+
+  <div id="computedproperties">
+    <p>Original message: "{{ message }}"</p>
+    <p>Computed reversed message: "{{ reversedMessage }}"</p>
+    <p>now: {{now}} (Computed)</p>
+    <p>now2: {{now2}} (Method)</p>
+    <p>now + now2: {{now3}} (Computed - computed + data)</p>
+    <button @click="updateTime">Update time</button>
+  </div>
+  <hr>
+  <div id="app8">
+      <div v-bind:class="{ active: isActive }">This is a active container?</div>
+      <button @click="changeActive">Change active</button>
+  </div>
+  
+  <script>
+      var app = new Vue({
+      el: '#app',
+      data: {
+        message: 'Hello Vue!',
+      }
+    });
+
+    var app2 = new Vue({
+      el: '#app-2',
+      data: {
+        message: 'You loaded this page on ' + new Date().toLocaleString()
+      }
+    });
+
+    var app3 = new Vue({
+      el: '#app-3',
+      data: {
+        seen: true
+      },
+      methods: {
+        toggle: function() {
+          this.seen = !this.seen;
+        }
+      }
+    });
+
+    var app4 = new Vue({
+      el: '#app-4',
+      data: {
+        todos: [
+          { text: 'Learn JavaScript' },
+          { text: 'Learn Vue' },
+          { text: 'Build something awesome' }
+        ],
+        extra: [
+          { text: '!!!' },
+          { text: 'Awesome' },
+          { text: 'IS' },
+          { text: 'ODM' }
+        ]
+      },
+      methods: {
+        addItem: function() {
+          this.todos.push(this.extra.pop());
+        }
+      }
+    });
+
+    var app5 = new Vue({
+      el: '#app-5',
+      data: {
+        message: 'Hello Vue.js!'
+      },
+      methods: {
+        reverseMessage: function () {
+          this.message = this.message.split('').reverse().join('')
+        }
+      }
+    });
+    var app6 = new Vue({
+      el: '#app-6',
+      data: {
+        message: 'Hello Vue!'
+      }
+    });
+
+    Vue.component('todo-item', {
+      props: ['todo'],
+      template: '<li>{{ todo.text }}</li>'
+    })
+
+    var app7 = new Vue({
+      el: '#app-7',
+      data: {
+        odm: [
+          { id: 0, text: 'Eagel' },
+          { id: 1, text: 'Shild' },
+          { id: 2, text: 'Bay' }
+        ]
+      }
+    });
+
+    var compute = new Vue({
+      el: '#computedproperties',
+      data: {
+        message: 'Hello',
+        now2: Date.now()
+      },
+      computed: {
+        // a computed getter
+        reversedMessage: function () {
+          // `this` points to the vm instance
+          return this.message.split('').reverse().join('')
+        },
+        now: function () {
+          return Date.now()
+        },
+        now3: function() {
+          return this.now + this.now2;
+        }
+      },
+      methods: {
+        updateTime: function() {
+          this.now2 = Date.now();
+        }
+      }
+    });
+
+     var app8 = new Vue({
+      el: '#app8',
+      data: {
+        isActive: true
+      },
+
+      methods: {
+        changeActive: function() {
+          this.isActive = !this.isActive;
+        }
+      }
+    });
+  </script>
+</body>
+</html>
